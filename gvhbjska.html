@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二十四节气文化展示</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Ma Shan Zheng', 'Microsoft YaHei', '微软雅黑', cursive;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #fef9f0 0%, #f5f1e8 100%), 
+                        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 C30,10 70,10 80,20 C90,30 90,70 80,80 C70,90 30,90 20,80 C10,70 10,30 20,20 Z" fill="none" stroke="%23d9c7a7" stroke-width="0.5"/></svg>');
+            color: #5c3713;
+            line-height: 1.6;
+            padding-bottom: 50px;
+            display: flex;
+        }
+        
+        /* 左侧菜单样式 - 黑色风格 */
+        .sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: #f5e8c8;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding: 20px 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+        
+        .sidebar-title {
+            padding: 0 20px 15px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        
+        .sidebar-season {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-season-title {
+            padding: 10px 20px;
+            background-color: #2d2d2d;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-season-title:hover {
+            background-color: #3a3a3a;
+        }
+        
+        .sidebar-season-content {
+            display: none;
+        }
+        
+        .sidebar-season.active .sidebar-season-content {
+            display: block;
+        }
+        
+        .sidebar-season-item {
+            padding: 8px 20px 8px 35px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .sidebar-season-item:hover {
+            background-color: #333;
+            padding-left: 40px;
+        }
+        
+        /* 收藏功能样式 */
+        .favorites-section {
+            padding: 0 20px;
+            margin-top: 30px;
+            border-top: 1px solid #333;
+        }
+        
+        .favorites-title {
+            padding: 15px 0;
+            font-size: 1.3rem;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            margin-bottom: 10px;
+        }
+        
+        .favorites-list {
+            margin-bottom: 20px;
+        }
+        
+        .favorite-item {
+            padding: 8px 20px 8px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .favorite-item:hover {
+            background-color: #333;
+            padding-left: 40px;
+        }
+        
+        .remove-favorite {
+            color: #ff6b6b;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .favorite-item:hover .remove-favorite {
+            opacity: 1;
+        }
+        
+        .no-favorites {
+            padding: 8px 20px 8px 35px;
+            color: #888;
+        }
+        
+        /* 主内容区域样式 */
+        .main-content {
+            flex: 1;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+        
+        .header {
+            background: linear-gradient(120deg, #8b4513, #a0522d);
+            color: #f5e8c8;
+            text-align: center;
+            padding: 40px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 8px double #d9c7a7;
+        }
+        
+        .header h1 {
+            font-size: 3.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            letter-spacing: 4px;
+        }
+        
+        .header p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .season-section {
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .season-title {
+            text-align: center;
+            margin: 40px 0 30px;
+            position: relative;
+        }
+        
+        .season-title h2 {
+            font-size: 2.5rem;
+            color: #8b4513;
+            display: inline-block;
+            padding: 0 20px;
+            background: #fef9f0;
+            position: relative;
+            z-index: 1;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+            letter-spacing: 3px;
+        }
+        
+        .season-title::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, transparent, #d9c7a7, transparent);
+            z-index: 0;
+        }
+        
+        /* 轮播图样式 */
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            padding-top: 75%; /* 4:3比例 (3/4 = 0.75) */
+            height: 0;
+        }
+        
+        .carousel {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .carousel-item {
+            min-width: 100%;
+            background: white;
+            border: 1px solid #e8dfca;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .carousel-image {
+            flex: 1;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .carousel-content {
+            padding: 20px;
+            background-color: white;
+        }
+        
+        .carousel-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: #8b4513;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .carousel-content p {
+            color: #7a5c3c;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+        
+        .carousel-date {
+            display: inline-block;
+            background: #f0e6d3;
+            color: #8b4513;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px dashed #d9c7a7;
+            margin-bottom: 10px;
+        }
+        
+        .carousel-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(139, 69, 19, 0.85);
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #f5e8c8;
+        }
+        
+        /* 轮播控制按钮 */
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .carousel-control:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-50%) scale(1.1);
+        }
+        
+        .carousel-prev {
+            left: 20px;
+        }
+        
+        .carousel-next {
+            right: 20px;
+        }
+        
+        .carousel-indicators {
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .indicator.active {
+            background: white;
+            transform: scale(1.3);
+        }
+        
+        /* 模态框样式 - 修改为左右布局 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: white;
+            max-width: 1000px;
+            margin: 40px auto;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalFade 0.4s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @keyframes modalFade {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            background: linear-gradient(120deg, #8b4513, #a0522d);
+            color: #f5e8c8;
+            padding: 25px 30px;
+            position: relative;
+            border-bottom: 3px solid #d9c7a7;
+        }
+        
+        .modal-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        
+        .modal-date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+        
+        /* 收藏按钮 */
+        .favorite-btn {
+            position: absolute;
+            top: 20px;
+            right: 70px;
+            background: transparent;
+            border: none;
+            color: #f5e8c8;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .favorite-btn .fas {
+            color: #ffd700; /* 已收藏的金色星星 */
+        }
+        
+        /* 修改模态框主体为左右布局 */
+        .modal-body {
+            padding: 30px;
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+        
+        .modal-image-container {
+            flex: 0 0 40%; /* 图片容器占据40%宽度 */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-image {
+            border-radius: 8px;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-height: 300px;
+        }
+        
+        .modal-info {
+            flex: 1; /* 内容占据剩余60%宽度 */
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-info h3 {
+            color: #8b4513;
+            margin: 20px 0 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8dfca;
+            font-size: 1.4rem;
+        }
+        
+        .modal-info h3:first-child {
+            margin-top: 0;
+        }
+        
+        .modal-info p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .poem {
+            font-style: italic;
+            color: #7a5c3c;
+            background: #f9f5eb;
+            padding: 15px;
+            border-left: 4px solid #a0522d;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+            line-height: 1.8;
+        }
+        
+        .customs-list {
+            list-style-type: none;
+        }
+        
+        .customs-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .customs-list li:before {
+            content: "•";
+            color: #a0522d;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #7a5c3c;
+            font-size: 0.9rem;
+            border-top: 1px solid #e8dfca;
+        }
+        
+        .search-container {
+            max-width: 500px;
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #d9c7a7;
+            border-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        /* 季节特色样式 */
+        .spring-item .carousel-tag {
+            background: rgba(139, 195, 74, 0.85);
+        }
+        
+        .summer-item .carousel-tag {
+            background: rgba(255, 152, 0, 0.85);
+        }
+        
+        .autumn-item .carousel-tag {
+            background: rgba(255, 87, 34, 0.85);
+        }
+        
+        .winter-item .carousel-tag {
+            background: rgba(33, 150, 243, 0.85);
+        }
+        
+        /* 响应式适配 */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 200px;
+            }
+            .main-content {
+                margin-left: 200px;
+                width: calc(100% - 200px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            /* 移动端模态框恢复垂直布局 */
+            .modal-body {
+                flex-direction: column;
+            }
+            
+            .modal-image-container {
+                flex: 0 0 auto;
+            }
+            
+            .modal-image {
+                min-height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 左侧菜单 -->
+    <div class="sidebar">
+        <div class="sidebar-title">节气导航</div>
+        
+        <div class="sidebar-season" data-season="春季">
+            <div class="sidebar-season-title">
+                春季 <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="sidebar-season-content">
+                <!-- 春季菜单项将通过JS生成 -->
+            </div>
+        </div>
+        
+        <div class="sidebar-season" data-season="夏季">
+            <div class="sidebar-season-title">
+                夏季 <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="sidebar-season-content">
+                <!-- 夏季菜单项将通过JS生成 -->
+            </div>
+        </div>
+        
+        <div class="sidebar-season" data-season="秋季">
+            <div class="sidebar-season-title">
+                秋季 <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="sidebar-season-content">
+                <!-- 秋季菜单项将通过JS生成 -->
+            </div>
+        </div>
+        
+        <div class="sidebar-season" data-season="冬季">
+            <div class="sidebar-season-title">
+                冬季 <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="sidebar-season-content">
+                <!-- 冬季菜单项将通过JS生成 -->
+            </div>
+        </div>
+        
+        <!-- 收藏区域 -->
+        <div class="favorites-section">
+            <div class="favorites-title">我的收藏</div>
+            <div class="favorites-list" id="favoritesList">
+                <div class="no-favorites">暂无收藏的节气</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <div class="header">
+            <h1><i class="fas fa-leaf"></i> 二十四节气文化</h1>
+            <p>探索中国传统二十四节气的丰富文化与自然智慧</p>
+        </div>
+        
+        <div class="container">
+            <div class="search-container">
+                <input type="text" class="search-box" placeholder="搜索节气名称..." id="searchInput">
+            </div>
+            
+            <!-- 春季节气轮播 -->
+            <div class="season-section">
+                <div class="season-title">
+                    <h2>春季</h2>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel" id="springCarousel">
+                        <!-- 春季节气轮播项将通过JavaScript动态生成 -->
+                    </div>
+                    <button class="carousel-control carousel-prev" data-target="springCarousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control carousel-next" data-target="springCarousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-indicators" id="springIndicators">
+                        <!-- 指示器将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 夏季节气轮播 -->
+            <div class="season-section">
+                <div class="season-title">
+                    <h2>夏季</h2>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel" id="summerCarousel">
+                        <!-- 夏季节气轮播项将通过JavaScript动态生成 -->
+                    </div>
+                    <button class="carousel-control carousel-prev" data-target="summerCarousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control carousel-next" data-target="summerCarousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-indicators" id="summerIndicators">
+                        <!-- 指示器将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 秋季节气轮播 -->
+            <div class="season-section">
+                <div class="season-title">
+                    <h2>秋季</h2>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel" id="autumnCarousel">
+                        <!-- 秋季节气轮播项将通过JavaScript动态生成 -->
+                    </div>
+                    <button class="carousel-control carousel-prev" data-target="autumnCarousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control carousel-next" data-target="autumnCarousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-indicators" id="autumnIndicators">
+                        <!-- 指示器将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 冬季节气轮播 -->
+            <div class="season-section">
+                <div class="season-title">
+                    <h2>冬季</h2>
+                </div>
+                <div class="carousel-container">
+                    <div class="carousel" id="winterCarousel">
+                        <!-- 冬季节气轮播项将通过JavaScript动态生成 -->
+                    </div>
+                    <button class="carousel-control carousel-prev" data-target="winterCarousel">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="carousel-control carousel-next" data-target="winterCarousel">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="carousel-indicators" id="winterIndicators">
+                        <!-- 指示器将通过JS生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="modal" id="seasonModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modalTitle">节气名称</h2>
+                    <div class="modal-date" id="modalDate">日期</div>
+                    <button class="favorite-btn" id="modalFavoriteBtn">
+                        <i class="far fa-star" id="favoriteIcon"></i>
+                    </button>
+                    <span class="close-btn" id="closeModal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-image-container">
+                        <div class="modal-image" id="modalImage"></div>
+                    </div>
+                    <div class="modal-info">
+                        <h3>节气简介</h3>
+                        <p id="modalIntro">节气介绍内容...</p>
+                        
+                        <h3>节气特征</h3>
+                        <p id="modalFeatures">节气特征内容...</p>
+                        
+                        <h3>相关诗句</h3>
+                        <div class="poem" id="modalPoem">诗句内容...</div>
+                        
+                        <h3>传统习俗</h3>
+                        <ul class="customs-list" id="modalCustoms">
+                            <!-- 习俗列表将通过JavaScript动态生成 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>二十四节气 · 中国传统文化的智慧结晶</p>
+            <p>© 2025 二十四节气文化展示</p>
+        </div>
+    </div>
+
+    <script>
+        // 二十四节气数据
+        const seasonsData = [
+            {
+                id: 1,
+                name: "立春",
+                date: "2月3-5日",
+                type: "春季",
+                image: "https://ts1.tc.mm.bing.net/th/id/OIP-C.2wbd8FdjaOUIjuPVsrikBgHaEl?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+                intro: "立春，是二十四节气中的第一个节气，意味着春季的开始。立春期间，气温开始回升，万物复苏，大地回春。",
+                features: "气温回升，白昼渐长，冰雪融化，万物开始复苏。农事活动开始准备春耕。",
+                poem: "《立春》\n杜甫\n春日春盘细生菜，忽忆两京梅发时。\n盘出高门行白玉，菜传纤手送青丝。",
+                customs: ["吃春饼", "咬春", "迎春", "打春牛"]
+            },
+            {
+                id: 2,
+                name: "雨水",
+                date: "2月18-20日",
+                type: "春季",
+                image: "https://ts1.tc.mm.bing.net/th/id/R-C.a10e6b3ba8dd8caacfd1cd0f37622074?rik=FEgiMsiioz92ag&riu=http%3a%2f%2fseopic.699pic.com%2fphoto%2f40010%2f3221.jpg_wh1200.jpg&ehk=Hik%2fbJygAl3BVJ444a%2fghoW%2bHGDbGTzWWh070oiWBfU%3d&risl=&pid=ImgRaw&r=0",
+                intro: "雨水节气意味着降雨开始，雨量逐渐增多。此时气温回升，冰雪融化，降水形式由雪转为雨。",
+                features: "降水增多，气温进一步回升，草木开始萌芽，春意渐浓。",
+                poem: "《春夜喜雨》\n杜甫\n好雨知时节，当春乃发生。\n随风潜入夜，润物细无声。",
+                customs: ["回娘家", "接寿", "拉保保", "占稻色"]
+            },
+            {
+                id: 3,
+                name: "惊蛰",
+                date: "3月5-7日",
+                type: "春季",
+                image: "https://img95.699pic.com/photo/40168/3102.jpg_wh860.jpg",
+                intro: "惊蛰时节，春雷始鸣，惊醒蛰伏于地下冬眠的昆虫。此时气温回升较快，渐有春雷萌动。",
+                features: "春雷响动，冬眠动物苏醒，气温明显回升，春耕开始。",
+                poem: "《观田家》\n韦应物\n微雨众卉新，一雷惊蛰始。\n田家几日闲，耕种从此起。",
+                customs: ["祭白虎", "打小人", "吃梨", "蒙鼓皮"]
+            },
+            {
+                id: 4,
+                name: "春分",
+                date: "3月20-21日",
+                type: "春季",
+                image: "https://img95.699pic.com/photo/40168/8545.jpg_wh300.jpg!/fh/300/quality/90",
+                intro: "春分时，太阳直射赤道，昼夜几乎相等。此后太阳直射位置北移，北半球昼长夜短。",
+                features: "昼夜平分，气候温和，雨水充沛，阳光明媚，春意盎然。",
+                poem: "《春日》\n朱熹\n胜日寻芳泗水滨，无边光景一时新。\n等闲识得东风面，万紫千红总是春。",
+                customs: ["立蛋", "祭日", "吃春菜", "送春牛"]
+            },
+            {
+                id: 5,
+                name: "清明",
+                date: "4月4-6日",
+                type: "春季",
+                image: "https://img95.699pic.com/photo/40168/9107.jpg_wh860.jpg",
+                intro: "清明既是节气又是传统节日。此时气候温暖，草木萌动，天气清澈明朗，万物欣欣向荣。",
+                features: "气温升高，雨量增多，是春耕春种的大好时节，也是扫墓祭祖的日子。",
+                poem: "《清明》\n杜牧\n清明时节雨纷纷，路上行人欲断魂。\n借问酒家何处有，牧童遥指杏花村。",
+                customs: ["扫墓祭祖", "踏青", "插柳", "放风筝"]
+            },
+            {
+                id: 6,
+                name: "谷雨",
+                date: "4月19-21日",
+                type: "春季",
+                image: "https://img95.699pic.com/photo/40191/0394.jpg_wh860.jpg",
+                intro: "谷雨是春季最后一个节气，源自古人'雨生百谷'之说。此时降水明显增加，谷物茁壮成长。",
+                features: "雨水增多，气温回升加快，是播种移苗、埯瓜点豆的最佳时节。",
+                poem: "《七言诗》\n郑板桥\n不风不雨正晴和，翠竹亭亭好节柯。\n最爱晚凉佳客至，一壶新茗泡松萝。",
+                customs: ["祭海", "走谷雨", "喝谷雨茶", "赏牡丹"]
+            },
+            {
+                id: 7,
+                name: "立夏",
+                date: "5月5-7日",
+                type: "夏季",
+                image: "https://img95.699pic.com/video_cover/28/15/49/b_nXBGNjIn67Jy1618281549.JPG",
+                intro: "立夏表示告别春天，是夏天的开始。温度明显升高，炎暑将临，雷雨增多，农作物进入旺季生长。",
+                features: "气温显著升高，雷雨增多，农作物生长旺盛，昆虫活跃。",
+                poem: "《山亭夏日》\n高骈\n绿树阴浓夏日长，楼台倒影入池塘。\n水晶帘动微风起，满架蔷薇一院香。",
+                customs: ["秤人", "吃立夏蛋", "尝三鲜", "吃立夏饭"]
+            },
+            {
+                id: 8,
+                name: "小满",
+                date: "5月20-22日",
+                type: "夏季",
+                image: "https://img95.699pic.com/photo/40192/1172.jpg_wh860.jpg",
+                intro: "小满时节，夏熟作物籽粒开始饱满，但尚未成熟，只是小满，还未大满。",
+                features: "气温升高，雨水充沛，小麦等夏熟作物籽粒饱满但未成熟。",
+                poem: "《归田园四时乐春夏二首》\n欧阳修\n南风原头吹百草，草木丛深茅舍小。\n麦穗初齐稚子娇，桑叶正肥蚕食饱。",
+                customs: ["祭车神", "抢水", "祭蚕", "吃苦菜"]
+            },
+            {
+                id: 9,
+                name: "芒种",
+                date: "6月5-7日",
+                type: "夏季",
+                image: "https://img95.699pic.com/photo/40174/1237.jpg_wh860.jpg",
+                intro: "芒种字面意思是'有芒的麦子快收，有芒的稻子可种'，是一个典型反映农业物候现象的节气。",
+                features: "气温显著升高，雨量充沛，空气湿度大，适宜晚稻等谷类作物种植。",
+                poem: "《时雨》\n陆游\n时雨及芒种，四野皆插秧。\n家家麦饭美，处处菱歌长。",
+                customs: ["送花神", "安苗", "打泥巴仗", "煮梅"]
+            },
+            {
+                id: 10,
+                name: "夏至",
+                date: "6月21-22日",
+                type: "夏季",
+                image: "https://img95.699pic.com/photo/50042/5204.jpg_wh860.jpg",
+                intro: "夏至时，太阳直射北回归线，是北半球一年中白昼最长的一天。此时气温高、湿度大、不时出现雷阵雨。",
+                features: "白昼最长，太阳高度角最高，气温继续升高，暴雨增多。",
+                poem: "《和梦得夏至忆苏州呈卢宾客》\n白居易\n忆在苏州日，常谙夏至筵。\n粽香筒竹嫩，炙脆子鹅鲜。",
+                customs: ["祭神祭祖", "消夏避伏", "吃面", "称重"]
+            },
+            {
+                id: 11,
+                name: "小暑",
+                date: "7月6-8日",
+                type: "夏季",
+                image: "https://image.baidu.com/search/down?url=https://tvax1.sinaimg.cn/large/0032l8l0gy1gsngidrx2cj63y82801kx02.jpg",
+                intro: "小暑意指天气开始炎热，但还没到最热。此时江淮流域梅雨即将结束，盛夏开始，气温升高，进入伏旱期。",
+                features: "气温进一步升高，雷暴频繁，雨量集中，进入防汛关键期。",
+                poem: "《夏日对雨》\n裴度\n登楼逃盛夏，万象正埃尘。\n对面雷嗔树，当街雨趁人。",
+                customs: ["食新", "吃饺子", "晒书画衣服", "游伏"]
+            },
+            {
+                id: 12,
+                name: "大暑",
+                date: "7月22-24日",
+                type: "夏季",
+                image: "https://img95.699pic.com/photo/40153/3263.jpg_wh300.jpg!/fh/300/quality/90",
+                intro: "大暑是一年中最热的节气，这时正值中伏前后，中国大部分地区为一年最热时期，也是喜热作物生长速度最快的时期。",
+                features: "高温酷热，雷暴频繁，台风活跃，旱涝灾害易发。",
+                poem: "《消暑》\n白居易\n何以消烦暑，端坐一院中。\n眼前无长物，窗下有清风。",
+                customs: ["饮伏茶", "晒伏姜", "烧伏香", "送大暑船"]
+            },
+            {
+                id: 13,
+                name: "立秋",
+                date: "8月7-9日",
+                type: "秋季",
+                image: "https://img95.699pic.com/photo/50046/9606.jpg_wh860.jpg",
+                intro: "立秋是秋季的第一个节气，标志着孟秋时节的正式开始。立秋后虽然一时暑气难消，还有'秋老虎'的余威，但总的趋势是天气逐渐凉爽。",
+                features: "天气逐渐转凉，梧桐树开始落叶，农作物即将成熟。",
+                poem: "《立秋》\n刘翰\n乳鸦啼散玉屏空，一枕新凉一扇风。\n睡起秋声无觅处，满阶梧桐月明中。",
+                customs: ["贴秋膘", "啃秋", "秋社", "祭祀土地神"]
+            },
+            {
+                id: 14,
+                name: "处暑",
+                date: "8月22-24日",
+                type: "秋季",
+                image: "https://imgs.design006.com/202308/Design006_Micnh465Jh.png?x-oss-process=style/prev_w_750_h_auto",
+                intro: "处暑的'处'是指'终止'，处暑的意义是'夏天暑热正式终止'。此时气温逐渐下降，暑气渐消。",
+                features: "气温下降，秋高气爽，是郊游登高的好时节，也是收获的季节。",
+                poem: "《早秋曲江感怀》\n白居易\n离离暑云散，袅袅凉风起。\n池上秋又来，荷花半成子。",
+                customs: ["放河灯", "开渔节", "吃鸭子", "拜土地爷"]
+            },
+            {
+                id: 15,
+                name: "白露",
+                date: "9月7-9日",
+                type: "秋季",
+                image: "https://img95.699pic.com/photo/40162/1958.jpg_wh300.jpg!/fh/300/quality/90",
+                intro: "白露时节，天气转凉，清晨时分地面和叶子上会出现露珠，这是因夜晚水汽凝结而成。",
+                features: "昼夜温差加大，清晨露水日益加厚，农作物即将成熟。",
+                poem: "《白露》\n杜甫\n白露团甘子，清晨散马蹄。\n圃开连石树，船渡入江溪。",
+                customs: ["收清露", "祭禹王", "吃龙眼", "饮白露茶"]
+            },
+            {
+                id: 16,
+                name: "秋分",
+                date: "9月22-24日",
+                type: "秋季",
+                image: "https://ts3.tc.mm.bing.net/th/id/OIP-C.yVD3nB_x-nVjTPwi8zdF7wHaE8?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+                intro: "秋分时，太阳直射赤道，全球各地昼夜等长。秋分后太阳直射位置继续南移，北半球昼短夜长。",
+                features: "昼夜平分，气候由热转凉，秋高气爽，丹桂飘香。",
+                poem: "《中秋对月》\n李频\n秋分一夜停，阴魄最晶荧。\n好是生沧海，徐看历杳冥。",
+                customs: ["祭月", "竖蛋", "吃秋菜", "送秋牛"]
+            },
+            {
+                id: 17,
+                name: "寒露",
+                date: "10月8-9日",
+                type: "秋季",
+                image: "https://img95.699pic.com/photo/50063/0903.jpg_wh300.jpg!/fh/300/quality/90",
+                intro: "寒露是气候从凉爽到寒冷的过渡，露水增多，且带有寒意。此时南岭及以北的广大地区均已进入秋季。",
+                features: "气温更低，露水更多，且带寒意，北方已呈深秋景象。",
+                poem: "《月夜梧桐叶上见寒露》\n戴察\n萧疏桐叶上，月白露初团。\n滴沥清光满，荧煌素彩寒。",
+                customs: ["赏枫叶", "吃芝麻", "吃螃蟹", "饮菊花酒"]
+            },
+            {
+                id: 18,
+                name: "霜降",
+                date: "10月23-24日",
+                type: "秋季",
+                image: "https://img95.699pic.com/photo/40180/3336.jpg_wh860.jpg",
+                intro: "霜降是秋季的最后一个节气，意味着天气渐冷、初霜出现，是秋季到冬季的过渡节气。",
+                features: "天气更冷，露水凝结成霜，树叶枯黄掉落，冬天即将来临。",
+                poem: "《赋得九月尽》\n元稹\n霜降三旬后，蓂馀一叶秋。\n玄阴迎落日，凉魄尽残钩。",
+                customs: ["赏菊", "吃柿子", "进补", "送芋鬼"]
+            },
+            {
+                id: 19,
+                name: "立冬",
+                date: "11月7-8日",
+                type: "冬季",
+                image: "https://ts1.tc.mm.bing.net/th/id/R-C.9d606e67c6da757fa2eddd59ef634152?rik=00koNr8wjkHl8w&riu=http%3a%2f%2fseopic.699pic.com%2fphoto%2f40006%2f8941.jpg_wh1200.jpg&ehk=%2banzNw%2b14oqx2UV%2f6MHg2hMIlp6LrX0lnLQNDllr8hY%3d&risl=&pid=ImgRaw&r=0",
+                intro: "立冬表示冬季自此开始，万物进入休养、收藏状态。气候也由秋季少雨干燥向阴雨寒冻的冬季气候过渡。",
+                features: "气温显著下降，水开始结冰，土地开始冻结，万物进入休眠状态。",
+                poem: "《立冬》\n李白\n冻笔新诗懒写，寒炉美酒时温。\n醉看墨花月白，恍疑雪满前村。",
+                customs: ["补冬", "吃饺子", "祭祖", "酿黄酒"]
+            },
+            {
+                id: 20,
+                name: "小雪",
+                date: "11月22-23日",
+                type: "冬季",
+                image: "https://img95.699pic.com/photo/40165/0336.jpg_wh300.jpg!/fh/300/quality/90",
+                intro: "小雪节气，东亚地区已建立起比较稳定的经向环流，西伯利亚地区常有低压或低槽，当它们东移时会有大规模冷空气南下，中国东部会出现大范围大风降温天气。",
+                features: "气温持续下降，开始降雪，但雪量不大，故称小雪。",
+                poem: "《小雪》\n戴叔伦\n花雪随风不厌看，更多还肯失林峦。\n愁人正在书窗下，一片飞来一片寒。",
+                customs: ["腌腊肉", "吃糍粑", "晒鱼干", "刨汤肉"]
+            },
+            {
+                id: 21,
+                name: "大雪",
+                date: "12月6-8日",
+                type: "冬季",
+                image: "https://img95.699pic.com/photo/40240/5511.jpg_wh860.jpg",
+                intro: "大雪节气意味着天气更冷，降雪的可能性比小雪时更大了，并不指降雪量一定很大。",
+                features: "气温显著下降，降雪增多，北方常有积雪，河面开始结冰。",
+                poem: "《大雪》\n陆游\n大雪江南见未曾，今年方始是严凝。\n巧穿帘罅如相觅，重压林梢欲不胜。",
+                customs: ["观赏封河", "捕获乌鱼", "进补", "腌肉"]
+            },
+            {
+                id: 22,
+                name: "冬至",
+                date: "12月21-23日",
+                type: "冬季",
+                image: "https://ts1.tc.mm.bing.net/th/id/R-C.d0c784e35af7785eea3a6aad86beaf45?rik=yHflXNSNWWxphg&riu=http%3a%2f%2fimg95.699pic.com%2fphoto%2f40006%2f7918.jpg_wh300.jpg&ehk=hzmdOCdvRQl02Mka6MRcj4Ew33gmxxpVb1qyyLi5Q0k%3d&risl=&pid=ImgRaw&r=0",
+                intro: "冬至时，太阳直射南回归线，是北半球一年中白昼最短的一天。冬至过后，白昼逐渐变长。",
+                features: "白昼最短，太阳高度角最低，气温持续下降，进入数九寒天。",
+                poem: "《邯郸冬至夜思家》\n白居易\n邯郸驿里逢冬至，抱膝灯前影伴身。\n想得家中夜深坐，还应说着远行人。",
+                customs: ["吃饺子", "祭祖", "数九", "吃汤圆"]
+            },
+            {
+                id: 23,
+                name: "小寒",
+                date: "1月5-7日",
+                type: "冬季",
+                image: "https://img95.699pic.com/photo/40006/7937.jpg_wh860.jpg",
+                intro: "小寒标志着开始进入一年中最寒冷的日子。根据中国的气象资料，小寒是气温最低的节气，只有少数年份的大寒气温低于小寒的。",
+                features: "天气寒冷，但还没有到极点的意思，土壤冻结，河流封冻。",
+                poem: "《小寒》\n元稹\n小寒连大吕, 欢鹊垒新巢。\n拾食寻河曲，衔紫绕树梢。",
+                customs: ["吃菜饭", "探梅", "冰戏", "腊祭"]
+            },
+            {
+                id: 24,
+                name: "大寒",
+                date: "1月20-21日",
+                type: "冬季",
+                image: "https://ts1.tc.mm.bing.net/th/id/OIP-C.7Wdbquri3aXG8WOg5Ebn0AAAAA?cb=12&rs=1&pid=ImgDetMain&o=7&rm=3",
+                intro: "大寒是天气寒冷到极点的意思，是中国大部分地区一年中的最冷时期，风大，低温，地面积雪不化，呈现出冰天雪地、天寒地冻的严寒景象。",
+                features: "气温最低，风雪交加，天寒地冻，万物蛰伏。",
+                poem: "《大寒》\n陆游\n大寒雪未消，闭户不能出。\n可怜切云冠，局此容膝室。",
+                customs: ["吃糯米", "除尘", "糊窗", "蒸供"]
+            }
+        ];
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化轮播图和侧边栏
+            initCarousels();
+            initSidebar();
+            initFavorites(); // 初始化收藏功能
+            
+            // 搜索功能
+            // 搜索功能
+            // 搜索功能
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const seasonSections = document.querySelectorAll('.season-section');
+                
+                // 如果搜索框为空，恢复所有显示
+                if (searchTerm === '') {
+                    seasonSections.forEach(section => {
+                        section.style.display = 'block';
+                        const carouselItems = section.querySelectorAll('.carousel-item');
+                        carouselItems.forEach(item => {
+                            item.style.display = 'flex';
+                        });
+                    });
+                    return;
+                }
+                
+                let matchedSeasons = [];
+                
+                seasonSections.forEach(section => {
+                    const carouselItems = section.querySelectorAll('.carousel-item');
+                    let hasVisibleItem = false;
+                    
+                    carouselItems.forEach(item => {
+                        const title = item.querySelector('h3').textContent.toLowerCase();
+                        // 只匹配节气名称，不匹配季节名称
+                        if (title.includes(searchTerm)) {
+                            item.style.display = 'flex';
+                            hasVisibleItem = true;
+                            
+                            // 记录匹配的节气
+                            const seasonId = parseInt(item.dataset.id);
+                            const matchedSeason = seasonsData.find(s => s.id === seasonId);
+                            if (matchedSeason) {
+                                matchedSeasons.push(matchedSeason);
+                            }
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    section.style.display = hasVisibleItem ? 'block' : 'none';
+                });
+                
+                // 如果只有一个匹配结果，直接打开模态框
+                if (matchedSeasons.length === 1) {
+                    openModal(matchedSeasons[0]);
+                    
+                    // 可选：滚动到对应的季节区域
+                    const seasonType = matchedSeasons[0].type;
+                    const seasonSection = document.querySelector(`.season-title h2`).closest('.season-section');
+                    if (seasonSection) {
+                        seasonSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+            
+            // 添加键盘事件支持，按回车键也可以触发搜索
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.toLowerCase().trim();
+                    if (searchTerm === '') return;
+                    
+                    // 查找匹配的节气
+                    const matchedSeasons = seasonsData.filter(season => 
+                        season.name.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    if (matchedSeasons.length > 0) {
+                        // 如果有多个匹配，打开第一个
+                        openModal(matchedSeasons[0]);
+                        
+                        // 滚动到对应的季节区域
+                        const seasonType = matchedSeasons[0].type;
+                        const seasonSections = document.querySelectorAll('.season-section');
+                        for (let section of seasonSections) {
+                            const title = section.querySelector('.season-title h2').textContent;
+                            if (title.includes(seasonType)) {
+                                section.scrollIntoView({ behavior: 'smooth' });
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 关闭模态框
+            document.getElementById('closeModal').addEventListener('click', () => {
+                document.getElementById('seasonModal').style.display = 'none';
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', (e) => {
+                if (e.target === document.getElementById('seasonModal')) {
+                    document.getElementById('seasonModal').style.display = 'none';
+                }
+            });
+        });
+        
+        // 初始化轮播图
+        function initCarousels() {
+            const seasonTypes = {
+                '春季': 'springCarousel',
+                '夏季': 'summerCarousel',
+                '秋季': 'autumnCarousel',
+                '冬季': 'winterCarousel'
+            };
+            
+            // 为每个季节创建轮播
+            Object.keys(seasonTypes).forEach(type => {
+                const carouselId = seasonTypes[type];
+                const carousel = document.getElementById(carouselId);
+                const indicatorsContainer = document.getElementById(carouselId.replace('Carousel', 'Indicators'));
+                
+                const typeSeasons = seasonsData.filter(season => season.type === type);
+                
+                // 创建轮播项
+                typeSeasons.forEach((season, index) => {
+                    const item = document.createElement('div');
+                    item.className = `carousel-item ${type === '春季' ? 'spring-item' : 
+                                      type === '夏季' ? 'summer-item' : 
+                                      type === '秋季' ? 'autumn-item' : 'winter-item'}`;
+                    item.dataset.id = season.id;
+                    
+                    item.innerHTML = `
+                        <div class="carousel-image" style="background-image: url('${season.image}')">
+                            <div class="carousel-tag">${season.type}</div>
+                        </div>
+                        <div class="carousel-content">
+                            <h3><i class="fas fa-leaf"></i> ${season.name}</h3>
+                            <div class="carousel-date">${season.date}</div>
+                            <p>${season.intro}</p>
+                            <button class="view-details" style="align-self: flex-start; padding: 8px 16px; background: #8b4513; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                查看详情 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    // 添加查看详情事件
+                    item.querySelector('.view-details').addEventListener('click', () => {
+                        openModal(season);
+                    });
+                    
+                    carousel.appendChild(item);
+                    
+                    // 创建指示器
+                    const indicator = document.createElement('div');
+                    indicator.className = `indicator ${index === 0 ? 'active' : ''}`;
+                    indicator.dataset.index = index;
+                    indicator.addEventListener('click', () => {
+                        moveCarousel(carouselId, index);
+                    });
+                    indicatorsContainer.appendChild(indicator);
+                });
+                
+                // 初始化轮播位置
+                setCarouselPosition(carouselId, 0);
+                
+                // 添加轮播控制事件
+                document.querySelector(`.carousel-prev[data-target="${carouselId}"]`).addEventListener('click', () => {
+                    prevSlide(carouselId);
+                });
+                
+                document.querySelector(`.carousel-next[data-target="${carouselId}"]`).addEventListener('click', () => {
+                    nextSlide(carouselId);
+                });
+                
+                // 自动轮播
+                startAutoCarousel(carouselId);
+            });
+        }
+        
+        // 轮播控制函数
+        let carouselIntervals = {};
+        
+        function startAutoCarousel(carouselId) {
+            if (carouselIntervals[carouselId]) {
+                clearInterval(carouselIntervals[carouselId]);
+            }
+            
+            carouselIntervals[carouselId] = setInterval(() => {
+                nextSlide(carouselId);
+            }, 5000);
+        }
+        
+        function setCarouselPosition(carouselId, index) {
+            const carousel = document.getElementById(carouselId);
+            const items = carousel.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll(`#${carouselId.replace('Carousel', 'Indicators')} .indicator`);
+            
+            carousel.style.transform = `translateX(-${index * 100}%)`;
+            
+            indicators.forEach((indicator, i) => {
+                if (i === index) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+            
+            startAutoCarousel(carouselId);
+        }
+        
+        function moveCarousel(carouselId, index) {
+            const carousel = document.getElementById(carouselId);
+            const items = carousel.querySelectorAll('.carousel-item');
+            
+            if (index >= 0 && index < items.length) {
+                setCarouselPosition(carouselId, index);
+            }
+        }
+        
+        function prevSlide(carouselId) {
+            const items = document.getElementById(carouselId).querySelectorAll('.carousel-item');
+            const currentIndex = getCurrentCarouselIndex(carouselId);
+            const newIndex = (currentIndex - 1 + items.length) % items.length;
+            
+            setCarouselPosition(carouselId, newIndex);
+        }
+        
+        function nextSlide(carouselId) {
+            const items = document.getElementById(carouselId).querySelectorAll('.carousel-item');
+            const currentIndex = getCurrentCarouselIndex(carouselId);
+            const newIndex = (currentIndex + 1) % items.length;
+            
+            setCarouselPosition(carouselId, newIndex);
+        }
+        
+        function getCurrentCarouselIndex(carouselId) {
+            const indicators = document.querySelectorAll(`#${carouselId.replace('Carousel', 'Indicators')} .indicator`);
+            for (let i = 0; i < indicators.length; i++) {
+                if (indicators[i].classList.contains('active')) {
+                    return i;
+                }
+            }
+            return 0;
+        }
+        
+        // 初始化侧边栏
+        function initSidebar() {
+            const seasonTypes = ['春季', '夏季', '秋季', '冬季'];
+            
+            seasonTypes.forEach(type => {
+                const sidebarSeason = document.querySelector(`.sidebar-season[data-season="${type}"]`);
+                const contentContainer = sidebarSeason.querySelector('.sidebar-season-content');
+                const titleElement = sidebarSeason.querySelector('.sidebar-season-title');
+                
+                // 季节展开/折叠事件
+                titleElement.addEventListener('click', () => {
+                    sidebarSeason.classList.toggle('active');
+                    const icon = titleElement.querySelector('i');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+                
+                // 创建菜单项
+                const typeSeasons = seasonsData.filter(season => season.type === type);
+                typeSeasons.forEach(season => {
+                    const item = document.createElement('div');
+                    item.className = 'sidebar-season-item';
+                    item.textContent = season.name;
+                    item.dataset.id = season.id;
+                    
+                    // 修复：点击导航到对应节气并打开模态框
+                    item.addEventListener('click', () => {
+                        openModal(season);
+                    });
+                    
+                    contentContainer.appendChild(item);
+                });
+            });
+            
+            // 默认展开第一个季节
+            document.querySelector('.sidebar-season').classList.add('active');
+            const firstIcon = document.querySelector('.sidebar-season .sidebar-season-title i');
+            firstIcon.classList.remove('fa-chevron-down');
+            firstIcon.classList.add('fa-chevron-up');
+        }
+        
+        // 导航到指定节气
+        function navigateToSeason(id) {
+            const season = seasonsData.find(s => s.id === id);
+            if (!season) return;
+            
+            // 滚动到对应的季节区域
+            const seasonSection = document.querySelector(`.season-title h2:contains('${season.type}')`).closest('.season-section');
+            if (seasonSection) {
+                seasonSection.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // 切换到对应的轮播项
+            const carouselId = season.type === '春季' ? 'springCarousel' : 
+                              season.type === '夏季' ? 'summerCarousel' : 
+                              season.type === '秋季' ? 'autumnCarousel' : 'winterCarousel';
+            
+            const items = document.getElementById(carouselId).querySelectorAll('.carousel-item');
+            for (let i = 0; i < items.length; i++) {
+                if (parseInt(items[i].dataset.id) === id) {
+                    setCarouselPosition(carouselId, i);
+                    break;
+                }
+            }
+        }
+        
+        // 初始化收藏功能
+        function initFavorites() {
+            // 从本地存储加载收藏
+            let favorites = JSON.parse(localStorage.getItem('solarTermsFavorites') || '[]');
+            
+            // 更新收藏列表显示
+            function updateFavoritesList() {
+                const favoritesList = document.getElementById('favoritesList');
+                favoritesList.innerHTML = '';
+                
+                if (favorites.length === 0) {
+                    favoritesList.innerHTML = '<div class="no-favorites">暂无收藏的节气</div>';
+                    return;
+                }
+                
+                // 添加收藏项
+                favorites.forEach(seasonId => {
+                    const season = seasonsData.find(s => s.id === seasonId);
+                    if (season) {
+                        const item = document.createElement('div');
+                        item.className = 'favorite-item';
+                        item.dataset.id = season.id;
+                        item.innerHTML = `
+                            <span>${season.name}</span>
+                            <i class="fas fa-times remove-favorite" data-id="${season.id}"></i>
+                        `;
+                        
+                        // 修复：点击收藏项打开对应节气详情
+                        item.addEventListener('click', (e) => {
+                            // 防止点击移除按钮时触发
+                            if (!e.target.classList.contains('remove-favorite')) {
+                                openModal(season);
+                            }
+                        });
+                        
+                        // 移除收藏
+                        item.querySelector('.remove-favorite').addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            removeFavorite(season.id);
+                        });
+                        
+                        favoritesList.appendChild(item);
+                    }
+                });
+            }
+            
+            // 添加收藏
+            function addFavorite(seasonId) {
+                if (!favorites.includes(seasonId)) {
+                    favorites.push(seasonId);
+                    localStorage.setItem('solarTermsFavorites', JSON.stringify(favorites));
+                    updateFavoritesList();
+                    return true;
+                }
+                return false;
+            }
+            
+            // 移除收藏
+            function removeFavorite(seasonId) {
+                favorites = favorites.filter(id => id !== seasonId);
+                localStorage.setItem('solarTermsFavorites', JSON.stringify(favorites));
+                updateFavoritesList();
+                
+                // 更新模态框中的收藏图标
+                const currentModalId = document.getElementById('modalTitle').dataset.id;
+                if (currentModalId && parseInt(currentModalId) === seasonId) {
+                    document.getElementById('favoriteIcon').className = 'far fa-star';
+                }
+            }
+            
+            // 模态框收藏按钮点击事件
+            document.getElementById('modalFavoriteBtn').addEventListener('click', () => {
+                const seasonId = parseInt(document.getElementById('modalTitle').dataset.id);
+                const favoriteIcon = document.getElementById('favoriteIcon');
+                
+                if (favorites.includes(seasonId)) {
+                    // 取消收藏
+                    removeFavorite(seasonId);
+                    favoriteIcon.className = 'far fa-star';
+                } else {
+                    // 添加收藏
+                    addFavorite(seasonId);
+                    favoriteIcon.className = 'fas fa-star';
+                }
+            });
+            
+            // 初始加载收藏列表
+            updateFavoritesList();
+        }
+        
+        // 打开节气详情模态框
+        function openModal(season) {
+            document.getElementById('modalTitle').textContent = season.name;
+            document.getElementById('modalTitle').dataset.id = season.id;
+            document.getElementById('modalDate').textContent = season.date;
+            document.getElementById('modalImage').style.backgroundImage = `url('${season.image}')`;
+            document.getElementById('modalIntro').textContent = season.intro;
+            document.getElementById('modalFeatures').textContent = season.features;
+            document.getElementById('modalPoem').textContent = season.poem;
+            
+            // 清空习俗列表
+            const customsList = document.getElementById('modalCustoms');
+            customsList.innerHTML = '';
+            
+            // 添加习俗列表项
+            season.customs.forEach(custom => {
+                const li = document.createElement('li');
+                li.textContent = custom;
+                customsList.appendChild(li);
+            });
+            
+            // 更新收藏图标状态
+            const favorites = JSON.parse(localStorage.getItem('solarTermsFavorites') || '[]');
+            const favoriteIcon = document.getElementById('favoriteIcon');
+            if (favorites.includes(season.id)) {
+                favoriteIcon.className = 'fas fa-star';
+            } else {
+                favoriteIcon.className = 'far fa-star';
+            }
+            
+            document.getElementById('seasonModal').style.display = 'block';
+        }
+        
+        // 添加:contains选择器的polyfill
+        if (!Element.prototype.matches) {
+            Element.prototype.matches = Element.prototype.msMatchesSelector || 
+                                        Element.prototype.webkitMatchesSelector;
+        }
+        
+        if (!Element.prototype.closest) {
+            Element.prototype.closest = function(s) {
+                var el = this;
+                do {
+                    if (el.matches(s)) return el;
+                    el = el.parentElement || el.parentNode;
+                } while (el !== null && el.nodeType === 1);
+                return null;
+            };
+        }
+    </script>
+</body>
+</html>
